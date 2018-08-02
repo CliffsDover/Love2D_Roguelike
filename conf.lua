@@ -8,6 +8,15 @@ screenHeightPixels = screenHeight * tileHeight
 mapWidth = 80
 mapHeight = 45
 
+colors = {
+        dark_wall = { 0, 0, 100.0/255.0, 255.0/255.0 },
+        dark_ground = { 50.0/255.0, 50.0/255.0, 150/255.0, 255.0/255.0 }
+    }
+    
+room_max_size = 10
+room_min_size = 6
+max_rooms = 30
+
 function love.conf( t )
     t.identity = nil
     t.version = 11.1
