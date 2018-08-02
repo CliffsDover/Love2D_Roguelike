@@ -113,7 +113,7 @@ function recompute_fov()
     gameMap:reset_fov()
     fov:compute( player.x, player.y, 5, computeCalbak )
 end
-
+    
 function initialize_fov()
      --print( gameMap.tiles[21][16].blocked )
     fov = ROT.FOV.Precise:new( lightCalbak )

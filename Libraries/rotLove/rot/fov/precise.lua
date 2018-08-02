@@ -40,12 +40,7 @@ function Precise:compute(x, y, R, callback)
             A2={2*i+1, 2*neighborCount}
 
             blocks    =not self:_lightPasses(cx, cy)
-            --print( #SHADOWS )
             visibility=self:_checkVisibility(A1, A2, blocks, SHADOWS)
-            --print( #SHADOWS )
-            --for _,n in ipairs( SHADOWS ) do
-            --    print( n[1].." "..n[2] )
-            --end  
             if visibility>0 then callback(cx, cy, r, visibility) end
             if #SHADOWS==2 and SHADOWS[1][1]==0 and SHADOWS[2][1]==SHADOWS[2][2] then
                 break
