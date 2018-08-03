@@ -8,6 +8,8 @@ screenHeightPixels = screenHeight * tileHeight
 mapWidth = 80
 mapHeight = 45
 
+max_monsters_per_room = 3
+
 colors = {
         --dark_wall = { 0, 0, 100.0/255.0, 255.0/255.0 },
         --dark_ground = { 50.0/255.0, 50.0/255.0, 150/255.0, 255.0/255.0 },

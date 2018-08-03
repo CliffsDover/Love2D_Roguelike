@@ -63,7 +63,7 @@ function GameMap:create_room( room )
 end
 
 
-function GameMap:make_map( max_rooms, room_min_size, room_max_size, map_width, map_height, player )
+function GameMap:make_map( max_rooms, room_min_size, room_max_size, map_width, map_height, player, entities, max_monsters_per_room )
     --local room1 = Rect( 20, 15, 10, 15 )
     --local room2 = Rect( 35, 15, 10, 15 )
 
@@ -105,7 +105,7 @@ function GameMap:make_map( max_rooms, room_min_size, room_max_size, map_width, m
                     self:create_h_tunnel( prev_x, new_x, new_y )
                 end
             end
-                
+            self:place_entities( new_room, entities, max_monsters_per_room )    
             table.insert( rooms, new_room )
             num_rooms = num_rooms + 1
         end
@@ -168,5 +168,34 @@ function GameMap:initialize_fov()
     self.fov = ROT.FOV.Precise:new( lightCalbak )
     self.fov.gameMap = self
     --fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=true})
+end
+
+function GameMap:place_entities( room, entities, max_monsters_per_room )
+    num_of_monsters = love.math.random( 0, max_monsters_per_room )
+    
+    for i = 0, num_of_monsters - 1 do
+        local x = love.math.random( room.x1 + 1, room.x2 - 1 )
+        local y = love.math.random( room.y1 + 1, room.y2 - 1 )
+        local foundEmptyCell = false
+        for _, e in ipairs( entities ) do
+            if not( e.x == x and e.y == y ) then
+                foundEmptyCell = true
+            end
+        end
+        
+        if foundEmptyCell then
+            local monster
+            if love.math.random( 2 ) == 1 then
+                monster = Entity( x, y, '怪', {1,0,0,1} )
+            else
+                monster = Entity( x, y, '妖', {1,1,0,1} )
+            end
+            
+            table.insert( entities, monster )
+        end
+        
+        
+    end
+    
 end
 

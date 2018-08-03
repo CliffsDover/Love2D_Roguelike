@@ -23,14 +23,14 @@ function love.load()
     
     player = Entity( math.floor( screenWidth / 2 ), math.floor( screenHeight / 2 ), '人', { 1, 1, 1, 1 } )
     
-    npc = Entity( math.floor( screenWidth / 2 ) - 5, math.floor( screenHeight / 2 ), '怪', { 1, 1, 0, 1 } )
+    --npc = Entity( math.floor( screenWidth / 2 ) - 5, math.floor( screenHeight / 2 ), '怪', { 1, 1, 0, 1 } )
         
-    entities = { player, npc }
+    entities = { player }
     
     
     
     gameMap = GameMap( mapWidth, mapHeight )
-    gameMap:make_map(max_rooms, room_min_size, room_max_size, mapWidth, mapHeight, player)
+    gameMap:make_map(max_rooms, room_min_size, room_max_size, mapWidth, mapHeight, player, entities, max_monsters_per_room )
 
     gameMap:initialize_fov()
 
