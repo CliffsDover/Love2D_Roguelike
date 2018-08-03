@@ -6,6 +6,7 @@ require 'Part05/Entity'
 require 'Part05/GameMap'
 require 'Part05/input_handlers'
 require 'Part05/RenderFunctions'
+require 'Part05/GameStates'
 
 function love.load()
     io.stdout:setvbuf("no")
@@ -35,7 +36,7 @@ function love.load()
     gameMap:initialize_fov()
 
     fov_recompute = true
-
+    game_states = GAME_STATES.PLAYERS_TURN
 end
 
 
@@ -49,17 +50,32 @@ function love.update( dt )
             love.event.quit()
         end
         
-        if action['move'] then
+        if action['move'] and game_states == GAME_STATES.PLAYERS_TURN then
             local dx = action['move']['x']
             local dy = action['move']['y']
+            local destX = player.x + dx
+            local destY = player.y + dy
             if not gameMap:is_blocked( player.x + dx, player.y + dy ) then
-                player:move( dx, dy )
-                fov_recompute = true
+                local target = get_blocking_entities_at_location( entities, destX, destY )
+                if target then
+                    print( "你踢了"..target.name.."一腳!" )
+                else
+                    player:move( dx, dy )
+                    fov_recompute = true
+                end
             end
-            
+            game_states = GAME_STATES.ENEMY_TURN
         end
     end
 
+    if game_states == GAME_STATES.ENEMY_TURN then
+        for _, e in ipairs( entities ) do
+            if e ~= player then
+                print( e.name.."正在思考下一步…" )
+            end
+        end
+        game_states = GAME_STATES.PLAYERS_TURN
+    end
     
     --print( mouseX )
     --print( mouseCellX )

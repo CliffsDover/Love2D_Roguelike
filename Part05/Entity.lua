@@ -2,11 +2,13 @@ Object = require 'Libraries/classic/classic'
 
 Entity = Object:extend()
 
-function Entity:new( _x, _y, _char, _color )
+function Entity:new( _x, _y, _char, _color, _name, _blocks )
     self.x = _x
     self.y = _y
     self.char = _char
     self.color = _color
+    self.name = _name
+    self.blocks = _blocks or false
 end
 
 function Entity:update( dt )
@@ -25,3 +27,13 @@ function Entity:move( dx, dy )
     self.x = self.x + dx
     self.y = self.y + dy 
 end
+
+function get_blocking_entities_at_location( entities, x, y )
+    for _, e in ipairs( entities ) do
+        if e.blocks and e.x == x and e.y ==y then
+            return e
+        end
+    end
+    return nil
+end
+

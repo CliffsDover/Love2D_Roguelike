@@ -186,9 +186,9 @@ function GameMap:place_entities( room, entities, max_monsters_per_room )
         if foundEmptyCell then
             local monster
             if love.math.random( 2 ) == 1 then
-                monster = Entity( x, y, '怪', {1,0,0,1} )
+                monster = Entity( x, y, '怪', {1,0,0,1}, '鼠怪', true )
             else
-                monster = Entity( x, y, '妖', {1,1,0,1} )
+                monster = Entity( x, y, '妖', {1,1,0,1}, '蛇妖', true )
             end
             
             table.insert( entities, monster )
