@@ -32,7 +32,7 @@ function love.load()
     gameMap = GameMap( mapWidth, mapHeight )
     gameMap:make_map(max_rooms, room_min_size, room_max_size, mapWidth, mapHeight, player)
 
-    initialize_fov()
+    gameMap:initialize_fov()
 
     fov_recompute = true
 
@@ -70,7 +70,7 @@ end
 function love.draw()
     
     if fov_recompute then
-        recompute_fov()
+        gameMap:recompute_fov()
         fov_recompute = false
     end
     
@@ -90,32 +90,4 @@ function love.draw()
 end
 
 
-function lightCalbak(fov, x, y)
-    --print( "[lightCalbak] "..(x)..','..(y) )
-    if x < 1 or x > mapWidth or y < 1 or y > mapHeight then return true end
-    local block_sight = gameMap:is_block_sight( x, y )
-    
-    if block_sight then
-        return false
-    else
-        return true
-    end
-end
-    
-function computeCalbak(x, y, r, v)
-    --print( "[computeCalbak] "..(x)..','..(y).." "..r.." "..v )
-    gameMap.tiles[x][y].is_in_fov = ( v > 0 and true or false )
-    gameMap.tiles[x][y].visibility = v
-    return
-end
 
-function recompute_fov()
-    gameMap:reset_fov()
-    fov:compute( player.x, player.y, 5, computeCalbak )
-end
-    
-function initialize_fov()
-     --print( gameMap.tiles[21][16].blocked )
-    fov = ROT.FOV.Precise:new( lightCalbak )
-    --fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=true})
-end

@@ -132,8 +132,41 @@ end
 function GameMap:reset_fov()
     for x = 1, mapWidth do
         for y = 1, mapHeight do
-            gameMap.tiles[x][y].is_in_fov = false
+            self.tiles[x][y].is_in_fov = false
         end
     end   
+end
+
+
+function lightCalbak(fov, x, y)
+    --print( "[lightCalbak] "..(x)..','..(y) )
+    if x < 1 or x > mapWidth or y < 1 or y > mapHeight then return true end
+    local block_sight = fov.gameMap:is_block_sight( x, y )
+    
+    if block_sight then
+        return false
+    else
+        return true
+    end
+end
+    
+function computeCalbak( x, y, r, v)
+    --print( "[computeCalbak] "..(x)..','..(y).." "..r.." "..v )
+    
+    gameMap.tiles[x][y].is_in_fov = ( v > 0 and true or false )
+    gameMap.tiles[x][y].visibility = v
+    return
+end
+
+function GameMap:recompute_fov()
+    self:reset_fov()
+    self.fov:compute( player.x, player.y, 5, computeCalbak )
+end
+    
+function GameMap:initialize_fov()
+     --print( gameMap.tiles[21][16].blocked )
+    self.fov = ROT.FOV.Precise:new( lightCalbak )
+    self.fov.gameMap = self
+    --fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=true})
 end
 
