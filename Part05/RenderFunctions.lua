@@ -33,7 +33,9 @@ function render_all( entities, gameMap, screenWidth, screenHeight, colors )
     
     
     for _, entity in ipairs( entities ) do
-        entity:draw()
+        if gameMap.tiles[entity.x][entity.y].is_in_fov then
+            entity:draw()
+        end
     end
 
 end
