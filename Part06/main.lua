@@ -22,9 +22,17 @@ function love.load()
     input:bind( "down", "down" )
     input:bind( "left", "left" )
     input:bind( "right", "right" )
+    input:bind( "j", "j" )
+    input:bind( "k", "k" )
+    input:bind( "h", "h" )
+    input:bind( "l", "l" )
+    input:bind( "y", "y" )
+    input:bind( "u", "u" )
+    input:bind( "b", "b" )
+    input:bind( "n", "n" )
     
     local fighter_component = Fighter( 30, 2, 5 )
-    player = Entity( math.floor( screenWidth / 2 ), math.floor( screenHeight / 2 ), '人', { 1, 1, 1, 1 }, fighter_component )
+    player = Entity( math.floor( screenWidth / 2 ), math.floor( screenHeight / 2 ), '人', { 1, 1, 1, 1 }, "林沖", true, fighter_component )
     
     --npc = Entity( math.floor( screenWidth / 2 ) - 5, math.floor( screenHeight / 2 ), '怪', { 1, 1, 0, 1 } )
         
@@ -74,7 +82,7 @@ function love.update( dt )
         for _, e in ipairs( entities ) do
             if e ~= player then
                 --print( e.name.."正在思考下一步…" )
-                e.AI:take_turn()
+                e.AI:take_turn( player, gameMap, entities )
             end
         end
         game_states = GAME_STATES.PLAYERS_TURN

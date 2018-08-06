@@ -46,3 +46,27 @@ function get_blocking_entities_at_location( entities, x, y )
     return nil
 end
 
+function Entity:move_towards( target_x, target_y, gameMap, entities )
+    local dx = target_x - self.x
+    local dy = target_y - self.y
+    local distance = math.sqrt( math.pow( dx, 2 ) + math.pow( dy, 2 ) )
+    dx = math.floor( dx / distance + 0.5 )
+    dy = math.floor( dy / distance + 0.5 )
+    
+    if not( gameMap.tiles[self.x+dx][self.y+dy].blocked or get_blocking_entities_at_location( entities, self.x + dx, self.y + dy ) ) then
+        self:move( dx, dy )
+    end
+    
+end
+
+
+function Entity:distance_to( other )
+    local dx = other.x - self.x
+    local dy = other.y - self.y
+    local distance = math.sqrt( math.pow( dx, 2 ) + math.pow( dy, 2 ) )
+    print( "[Entity:distance_to] "..distance )
+    return distance
+end
+
+
+

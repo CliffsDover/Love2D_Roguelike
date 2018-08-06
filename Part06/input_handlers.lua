@@ -2,14 +2,22 @@ require 'Libraries/input'
 
 function handle_keys()
     local interval = 0.125
-    if input:down( "up", interval ) then 
+    if input:down( "up", interval ) or input:down( "k", interval ) then 
         return { move = { x = 0, y = -1 } } 
-    elseif input:down( "down", interval ) then 
+    elseif input:down( "down", interval ) or input:down( "j", interval )then 
         return { move = { x = 0, y = 1 } } 
-    elseif input:down( "left", interval ) then 
+    elseif input:down( "left", interval ) or input:down( "h", interval ) then 
         return { move = { x = -1, y = 0 } } 
-    elseif input:down( "right", interval ) then 
+    elseif input:down( "right", interval ) or input:down( "l", interval ) then 
         return { move = { x = 1, y = 0 } }
+    elseif input:down( "y", interval ) then 
+        return { move = { x = -1, y = -1 } } 
+    elseif input:down( "u", interval ) then 
+        return { move = { x = 1, y = -1 } } 
+    elseif input:down( "b", interval ) then 
+        return { move = { x = -1, y = 1 } } 
+    elseif input:down( "n", interval ) then 
+        return { move = { x = 1, y = 1 } }
     elseif input:pressed( "escape" ) then 
         return { exit = true }
     end 
