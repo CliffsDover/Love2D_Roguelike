@@ -1,5 +1,12 @@
 Moses = require 'Libraries/Moses/moses'
 
+RENDER_ORDER = { 
+    CORPSE = 1,
+    ITEM = 2,
+    ACTOR = 3
+}
+
+
 function render_all( entities, gameMap, screenWidth, screenHeight, colors )
     
     for y = 1, gameMap.height do
@@ -31,8 +38,9 @@ function render_all( entities, gameMap, screenWidth, screenHeight, colors )
         
     end
     
+    local entities_in_render_order = Moses.sortBy( entities, 'render_order' ) 
     
-    for _, entity in ipairs( entities ) do
+    for _, entity in ipairs( entities_in_render_order ) do
         if gameMap.tiles[entity.x][entity.y].is_in_fov then
             entity:draw()
         end

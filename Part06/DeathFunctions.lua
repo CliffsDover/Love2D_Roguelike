@@ -1,4 +1,5 @@
 require 'Part06/GameStates'
+require 'Part06/RenderFunctions'
 
 function kill_player( player )
     player.char = '屍'
@@ -15,6 +16,7 @@ function kill_monster( monster )
     monster.fighter = nil
     monster.AI = nil
     monster.name = monster.name.."的屍體"
+    monster.render_order = RENDER_ORDER.CORPSE
     return death_message
 end
 

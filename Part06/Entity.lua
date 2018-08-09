@@ -2,7 +2,7 @@ Object = require 'Libraries/classic/classic'
 
 Entity = Object:extend()
 
-function Entity:new( _x, _y, _char, _color, _name, _blocks, _fighter, _AI )
+function Entity:new( _x, _y, _char, _color, _name, _blocks, _render_order, _fighter, _AI )
     self.x = _x
     self.y = _y
     self.char = _char
@@ -11,6 +11,10 @@ function Entity:new( _x, _y, _char, _color, _name, _blocks, _fighter, _AI )
     self.blocks = _blocks or false
     self.fighter = _fighter or nil
     self.AI = _AI or nil
+    
+    if _render_order then
+        self.render_order = _render_order
+    end
     
     if self.fighter then
         self.fighter.owner = self

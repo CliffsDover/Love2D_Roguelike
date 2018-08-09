@@ -190,11 +190,11 @@ function GameMap:place_entities( room, entities, max_monsters_per_room )
             if love.math.random( 2 ) == 1 then
                 local fighter_component = Fighter( 10, 0, 2 )
                 local AI_component = BasicMonsterAI()
-                monster = Entity( x, y, '怪', {1,0,0,1}, '鼠怪', true, fighter_component, AI_component )
+                monster = Entity( x, y, '怪', {1,0,0,1}, '鼠怪', true, RENDER_ORDER.ACTOR, fighter_component, AI_component )
             else
                 local fighter_component = Fighter( 16, 1, 4 )
                 local AI_component = BasicMonsterAI()
-                monster = Entity( x, y, '妖', {1,1,0,1}, '蛇妖', true, fighter_component, AI_component )
+                monster = Entity( x, y, '妖', {1,1,0,1}, '蛇妖', true, RENDER_ORDER.ACTOR, fighter_component, AI_component )
             end
             
             table.insert( entities, monster )

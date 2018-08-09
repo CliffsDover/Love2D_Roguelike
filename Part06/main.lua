@@ -36,7 +36,7 @@ function love.load()
     input:bind( "mouse2", "mouse2" )
     
     local fighter_component = Fighter( 30, 2, 5 )
-    player = Entity( math.floor( screenWidth / 2 ), math.floor( screenHeight / 2 ), '人', { 1, 1, 1, 1 }, "林沖", true, fighter_component )
+    player = Entity( math.floor( screenWidth / 2 ), math.floor( screenHeight / 2 ), '主', { 1, 1, 1, 1 }, "林沖", true, RENDER_ORDER.ACTOR, fighter_component )
     
     --npc = Entity( math.floor( screenWidth / 2 ) - 5, math.floor( screenHeight / 2 ), '怪', { 1, 1, 0, 1 } )
         
@@ -143,7 +143,6 @@ function love.update( dt )
                         if dead_entity then 
                             --print( "We found dead bodies!" ) 
                             local message
-                            local game_states
                             if dead_entity == player then
                                 message, game_states = kill_player( dead_entity )
                             else
@@ -162,7 +161,10 @@ function love.update( dt )
                 end
             end
         end
-        game_states = GAME_STATES.PLAYERS_TURN
+        if game_states ~= GAME_STATES.PLAYER_DEAD then
+            game_states = GAME_STATES.PLAYERS_TURN
+        end
+        
     end
     
     --print( mouseX )
