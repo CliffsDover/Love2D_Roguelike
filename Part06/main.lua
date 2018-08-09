@@ -8,6 +8,7 @@ require 'Part06/input_handlers'
 require 'Part06/RenderFunctions'
 require 'Part06/GameStates'
 require 'Part06/Fighter'
+require 'Part06/DeathFunctions'
 
 function love.load()
     io.stdout:setvbuf("no")
@@ -30,6 +31,9 @@ function love.load()
     input:bind( "u", "u" )
     input:bind( "b", "b" )
     input:bind( "n", "n" )
+    input:bind( ".", "wait" )
+    input:bind( "mouse1", "mouse1" )
+    input:bind( "mouse2", "mouse2" )
     
     local fighter_component = Fighter( 30, 2, 5 )
     player = Entity( math.floor( screenWidth / 2 ), math.floor( screenHeight / 2 ), '人', { 1, 1, 1, 1 }, "林沖", true, fighter_component )
@@ -47,12 +51,15 @@ function love.load()
 
     fov_recompute = true
     game_states = GAME_STATES.PLAYERS_TURN
+    
+    
 end
 
 
 
 function love.update( dt )
     local action = handle_keys()
+    local player_turn_results = {}
     
     if action then
         
@@ -67,8 +74,10 @@ function love.update( dt )
             local destY = player.y + dy
             if not gameMap:is_blocked( player.x + dx, player.y + dy ) then
                 local target = get_blocking_entities_at_location( entities, destX, destY )
-                if target then
-                    print( "你踢了"..target.name.."一腳!" )
+                if target and target ~= player then
+                    --print( "你踢了"..target.name.."一腳!" )
+                    local attack_results = player.fighter:attack( target )
+                    table.insert( player_turn_results, attack_results )
                 else
                     player:move( dx, dy )
                     fov_recompute = true
@@ -76,13 +85,81 @@ function love.update( dt )
             end
             game_states = GAME_STATES.ENEMY_TURN
         end
+        
+        if action['mouse'] then
+            if action['mouse'].left == 1 then
+                astarPath = {}
+                print( "left" )
+                local mouseX, mouseY = love.mouse.getPosition()
+                local mouseCellX = math.floor( mouseX / tileWidth ) + 1
+                local mouseCellY = math.floor( mouseY / tileHeight ) + 1
+                print( mouseCellX .. "," .. mouseCellY )
+                --astar=ROT.Path.AStar(mouseCellX, mouseCellY, passableCallback)
+            end
+            
+            if action['mouse'].right == 1 then
+                print( 'right' )
+                local mouseX, mouseY = love.mouse.getPosition()
+                local mouseCellX = math.floor( mouseX / tileWidth ) + 1
+                local mouseCellY = math.floor( mouseY / tileHeight ) + 1
+                print( mouseCellX .. "," .. mouseCellY )
+                --astar:compute(mouseCellX, mouseCellY, astarCallback)
+            end
+            
+        end
+        
     end
+    
+    for _, r in ipairs( player_turn_results ) do
+        local message = r[ "message" ]
+        local dead_entity = r[ "dead" ]
+        if message then print( message ) end
+        if dead_entity then 
+            --print( "We found dead bodies!" ) 
+            local message
+            local game_states
+            if dead_entity == player then
+                message, game_states = kill_player( dead_entity )
+            else
+                message = kill_monster( dead_entity )
+            end
+            print( message )
+        end
+    end
+    
 
     if game_states == GAME_STATES.ENEMY_TURN then
         for _, e in ipairs( entities ) do
             if e ~= player then
                 --print( e.name.."正在思考下一步…" )
-                e.AI:take_turn( player, gameMap, entities )
+                if e.AI then
+                    local enemy_turn_results = e.AI:take_turn( player, gameMap, entities )
+                    
+                    for _, r in ipairs( enemy_turn_results ) do
+                        --print( r["message"] )
+                        local message = r[ "message" ]
+                        local dead_entity = r[ "dead" ]
+                        if message then print( message ) end
+                        if dead_entity then 
+                            --print( "We found dead bodies!" ) 
+                            local message
+                            local game_states
+                            if dead_entity == player then
+                                message, game_states = kill_player( dead_entity )
+                            else
+                                message = kill_monster( dead_entity )
+                            end
+                            print( message )
+                            if game_states == GAME_STATES.PLAYER_DEAD then
+                                break
+                            end
+                        end
+                    end
+                    
+                    if game_states == GAME_STATES.PLAYER_DEAD then
+                        break
+                    end
+                end
             end
         end
         game_states = GAME_STATES.PLAYERS_TURN
@@ -114,6 +191,15 @@ function love.draw()
     
     love.graphics.setColor( 1, 0, 0, 1 )
     love.graphics.rectangle( 'line', ( mouseCellX - 1 ) * tileWidth, ( mouseCellY - 1 ) * tileHeight, tileWidth, tileHeight )
+    
+    if astarPath then
+    for _, p in ipairs( astarPath ) do
+        love.graphics.circle( 'fill', p[1] * tileWidth - tileWidth / 2, p[2] * tileHeight - tileHeight / 2, 3 )
+    end
+    end
+    
+    love.graphics.setColor( 1, 1, 1, 1 )
+    love.graphics.print( "HP: "..player.fighter.hp.."/"..player.fighter.max_hp,  tileWidth,  ( screenHeight - 2 ) * tileHeight )
 end
 
 

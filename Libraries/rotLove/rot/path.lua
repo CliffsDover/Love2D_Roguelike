@@ -32,7 +32,7 @@ function Path:_getNeighbors(cx, cy)
         local dir=self._dirs[i]
         local x=cx+dir[1]
         local y=cy+dir[2]
-        if self._passableCallback(x, y) then
+        if self:_passableCallback(x, y) then
             table.insert(result, {x, y})
         end
     end

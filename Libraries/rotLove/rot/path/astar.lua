@@ -48,7 +48,7 @@ function AStar:compute(fromX, fromY, callback)
     if not item then return end
 
     while item do
-        callback(tonumber(item.x), tonumber(item.y))
+        callback(tonumber(item.x), tonumber(item.y),self)
         item=item.prev
     end
 end

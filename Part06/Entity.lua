@@ -64,9 +64,43 @@ function Entity:distance_to( other )
     local dx = other.x - self.x
     local dy = other.y - self.y
     local distance = math.sqrt( math.pow( dx, 2 ) + math.pow( dy, 2 ) )
-    print( "[Entity:distance_to] "..distance )
+    --sprint( "[Entity:distance_to] "..distance )
     return distance
 end
 
 
+function Entity:move_astar( target, entities, gameMap )
+    self.astar=ROT.Path.AStar(self.x, self.y, passableCallback)
+    self.astar.entity = self
+    --self.astar.gameMap = gameMap
+    self.astar_path = {}
+    self.astar:compute( target.x, target.y, astarCallback)
+    if #self.astar_path >= 1 and #self.astar_path < 25 then
+        self:move_towards( self.astar_path[#self.astar_path-1][1], self.astar_path[#self.astar_path-1][2], gameMap, entities )
+    else
+        self:move_towards( target.x, target.y, gameMap, entities )
+    end
+end
+
+function passableCallback(astar,x, y) 
+    local entity = get_blocking_entities_at_location( entities, x, y )
+    if entity ~= nil then
+        if entity ~= player and entity ~= astar.entity then
+            return false
+        end
+    end
+    
+    if gameMap.tiles[x][y].blocked then
+        return false
+    else
+        return true
+    end
+    
+end
+
+function astarCallback(x, y,astar)
+    --print( "[astarCallback] "..x..","..y )
+    --table.insert( astarPath, { x, y } )
+    table.insert( astar.entity.astar_path, {x,y} )
+end
 

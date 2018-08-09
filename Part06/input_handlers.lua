@@ -18,7 +18,17 @@ function handle_keys()
         return { move = { x = -1, y = 1 } } 
     elseif input:down( "n", interval ) then 
         return { move = { x = 1, y = 1 } }
+    elseif input:down( "wait", interval ) then 
+        return { move = { x = 0, y = 0 } }        
     elseif input:pressed( "escape" ) then 
         return { exit = true }
-    end 
+    end
+    
+    
+    if input:pressed( "mouse1" ) then 
+        return { mouse = { left = 1, right = 0 } } 
+    elseif input:pressed( "mouse2" ) then 
+        return { mouse = { left = 0, right = 1 } }
+    end
+    
 end
