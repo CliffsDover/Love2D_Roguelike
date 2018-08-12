@@ -6,9 +6,17 @@ screenWidthPixels = screenWidth * tileWidth
 screenHeightPixels = screenHeight * tileHeight
 
 mapWidth = 80
-mapHeight = 45
+mapHeight = 43
 
 max_monsters_per_room = 3
+
+bar_width = 20
+panel_height = 7
+panel_y = screenHeight - panel_height
+
+message_x = bar_width + 2
+message_width = screenWidth - bar_width - 2
+message_height = panel_height - 1
 
 colors = {
         dark_wall = { 0, 0, 100.0/255.0, 255.0/255.0 },
