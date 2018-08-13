@@ -188,7 +188,11 @@ function love.draw()
         fov_recompute = false
     end
     
-    render_all( entities, gameMap, screenWidth, screenHeight, colors, message_log )
+    local mouseX, mouseY = love.mouse.getPosition()
+    local mouseCellX = math.floor( mouseX / tileWidth ) + 1
+    local mouseCellY = math.floor( mouseY / tileHeight ) + 1
+    
+    render_all( entities, gameMap, screenWidth, screenHeight, colors, message_log, mouseCellX, mouseCellY )
     
     
     love.graphics.setColor( 1, 1, 1, 1 )

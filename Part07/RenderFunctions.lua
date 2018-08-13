@@ -9,7 +9,7 @@ RENDER_ORDER = {
 }
 
 
-function render_all( entities, gameMap, screenWidth, screenHeight, colors, message_log )
+function render_all( entities, gameMap, screenWidth, screenHeight, colors, message_log, mouseX, mouseY )
     
     for y = 1, gameMap.height do
         for x = 1, gameMap.width do
@@ -58,6 +58,9 @@ function render_all( entities, gameMap, screenWidth, screenHeight, colors, messa
         y = y + 1
     end
     
+    love.graphics.setColor( COLORS.WHITE )
+    love.graphics.print( get_names_under_mouse( mouseX, mouseY, entities, gameMap ), 1 * tileWidth, panel_y * tileHeight )
+    
 end
 
 
@@ -80,3 +83,20 @@ function render_bar( x, y, total_width, name, value, maximum, bar_color, back_co
     --print( ( 1 + x + math.floor( total_width / 2 ) - math.floor( utf8.len( bar_title ) / 2 ) ) )
     love.graphics.print( bar_title, ( 1 + x + math.floor( total_width / 2 ) - math.floor( utf8.len( bar_title ) / 2 ) ) * tileWidth, y * tileHeight )
  end
+ 
+ 
+ function get_names_under_mouse( mouseX, mouseY, entities, gameMap )
+    local names = ""
+    for _, e in ipairs( entities ) do
+        if e.x == mouseX and e.y == mouseY and  gameMap.tiles[mouseX][mouseY].is_in_fov then
+            if names == "" then
+                names = e.name
+            else
+                names = names   .."，"..e.name
+            end
+            
+        end
+    end
+    return names
+ end
+ 

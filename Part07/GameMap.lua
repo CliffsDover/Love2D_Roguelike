@@ -3,6 +3,7 @@ require 'Part07/Tile'
 require 'Part07/Rect'
 require 'Part07/Fighter'
 require 'Part07/AI'
+require 'Part07/Colors'
 
 GameMap = Object:extend()
 
@@ -190,11 +191,11 @@ function GameMap:place_entities( room, entities, max_monsters_per_room )
             if love.math.random( 2 ) == 1 then
                 local fighter_component = Fighter( 10, 0, 2 )
                 local AI_component = BasicMonsterAI()
-                monster = Entity( x, y, '怪', {1,0,0,1}, '鼠怪', true, RENDER_ORDER.ACTOR, fighter_component, AI_component )
+                monster = Entity( x, y, '怪', COLORS.LIGHTER_LIME , '鼠怪', true, RENDER_ORDER.ACTOR, fighter_component, AI_component )
             else
                 local fighter_component = Fighter( 16, 1, 4 )
                 local AI_component = BasicMonsterAI()
-                monster = Entity( x, y, '妖', {1,1,0,1}, '蛇妖', true, RENDER_ORDER.ACTOR, fighter_component, AI_component )
+                monster = Entity( x, y, '妖', COLORS.LIGHTER_GREEN, '蛇妖', true, RENDER_ORDER.ACTOR, fighter_component, AI_component )
             end
             
             table.insert( entities, monster )
