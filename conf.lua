@@ -9,6 +9,7 @@ mapWidth = 80
 mapHeight = 43
 
 max_monsters_per_room = 3
+max_items_per_room = 2
 
 bar_width = 20
 panel_height = 7
