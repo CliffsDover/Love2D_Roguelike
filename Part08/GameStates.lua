@@ -1,5 +1,6 @@
 GAME_STATES = { 
     PLAYERS_TURN = 1,
     ENEMY_TURN = 2,
-    PLAYER_DEAD = 3
+    PLAYER_DEAD = 3,
+    SHOW_INVENTORY = 4
 }

@@ -16,7 +16,7 @@ function MessageLog:new( x, width, height )
 end
 
 function MessageLog:AddMessage( message )
-    local new_message_lines = self:WrapText( message.text )
+    local new_message_lines = WrapText( message.text, self.width )
     for _, m in ipairs( new_message_lines ) do
         if #self.messages == self.height then
             table.remove( self.messages, 1 )
@@ -27,12 +27,12 @@ function MessageLog:AddMessage( message )
 end
 
 
-function MessageLog:WrapText( text )
+function WrapText( text, limit )
     local ret = {}
     local totalLen = utf8.len( text )
     local index = 1
-    for i = 1, totalLen, self.width do
-        local s = utf8.sub( text, i, i + self.width - 1 )
+    for i = 1, totalLen, limit do
+        local s = utf8.sub( text, i, i + limit - 1 )
         table.insert( ret, s )
     end
     return ret

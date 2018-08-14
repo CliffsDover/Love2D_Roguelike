@@ -43,6 +43,7 @@ function love.load()
     input:bind( "mouse1", "mouse1" )
     input:bind( "mouse2", "mouse2" )
     input:bind( "g", "pickup" )
+    input:bind( "i", "inventory" )
     
     local fighter_component = Fighter( 30, 2, 5 )
     local inventory_component = Inventory( 26 )
@@ -61,6 +62,7 @@ function love.load()
 
     fov_recompute = true
     game_states = GAME_STATES.PLAYERS_TURN
+    previous_game_state = game_states
     
     message_log = MessageLog( message_x, message_width, message_height )
      
@@ -75,7 +77,11 @@ function love.update( dt )
     if action then
         
         if action['exit'] == true then
-            love.event.quit()
+            if game_states == GAME_STATES.SHOW_INVENTORY then
+                game_states = previous_game_state
+            else
+                love.event.quit()
+            end
         end
         
         if action['move'] and game_states == GAME_STATES.PLAYERS_TURN then
@@ -134,6 +140,12 @@ function love.update( dt )
             end
             
         end
+        
+        if action['show_inventory'] then
+            previous_game_state = game_states
+            game_states = GAME_STATES.SHOW_INVENTORY
+        end
+        
         
         
     end
@@ -229,7 +241,7 @@ function love.draw()
     local mouseCellX = math.floor( mouseX / tileWidth ) + 1
     local mouseCellY = math.floor( mouseY / tileHeight ) + 1
     
-    render_all( entities, gameMap, screenWidth, screenHeight, colors, message_log, mouseCellX, mouseCellY )
+    render_all( entities, gameMap, screenWidth, screenHeight, colors, message_log, mouseCellX, mouseCellY, game_states )
     
     
     love.graphics.setColor( 1, 1, 1, 1 )

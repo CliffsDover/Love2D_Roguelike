@@ -21,7 +21,9 @@ function handle_keys()
     elseif input:down( "wait", interval ) then 
         return { move = { x = 0, y = 0 } }
     elseif input:down( "pickup", interval ) then 
-        return { pickup = true }      
+        return { pickup = true }    
+    elseif input:down( "inventory", interval ) then 
+        return { show_inventory = true }          
     elseif input:pressed( "escape" ) then 
         return { exit = true }
     end

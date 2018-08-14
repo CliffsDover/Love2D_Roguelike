@@ -1,6 +1,7 @@
 Moses = require 'Libraries/Moses/moses'
 utf8 = require "Libraries/utf8_simple"
-
+require 'Part08/GameStates'
+require 'Part08/Menu'
 
 RENDER_ORDER = { 
     CORPSE = 1,
@@ -9,7 +10,7 @@ RENDER_ORDER = {
 }
 
 
-function render_all( entities, gameMap, screenWidth, screenHeight, colors, message_log, mouseX, mouseY )
+function render_all( entities, gameMap, screenWidth, screenHeight, colors, message_log, mouseX, mouseY, game_state )
     
     for y = 1, gameMap.height do
         for x = 1, gameMap.width do
@@ -51,6 +52,8 @@ function render_all( entities, gameMap, screenWidth, screenHeight, colors, messa
 
     render_bar( 1, panel_y + 1, bar_width, '精力', player.fighter.hp, player.fighter.max_hp, COLORS.RED, COLORS.DARKEST_RED )
     
+    
+    
     local y = panel_y + 1
     for _, m in ipairs( message_log.messages ) do
         love.graphics.setColor( m.color )
@@ -60,6 +63,13 @@ function render_all( entities, gameMap, screenWidth, screenHeight, colors, messa
     
     love.graphics.setColor( COLORS.WHITE )
     love.graphics.print( get_names_under_mouse( mouseX, mouseY, entities, gameMap ), 1 * tileWidth, panel_y * tileHeight )
+    
+    
+    -- render menu
+    if game_state == GAME_STATES.SHOW_INVENTORY then
+        InventoryMenu( "按下代號來使用物品，或按ESC離開\n", player.inventory, 30, screenWidth, screenHeight )
+    end
+    
     
 end
 
