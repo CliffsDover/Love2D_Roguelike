@@ -26,24 +26,7 @@ function love.load()
     love.graphics.setNewFont( "Assets/Fonts/unifont-10.0.07.ttf", tileHeight )
     
     input = Input()
-    input:bind( "escape", "escape" )
-    input:bind( "up", "up" )
-    input:bind( "down", "down" )
-    input:bind( "left", "left" )
-    input:bind( "right", "right" )
-    input:bind( "j", "j" )
-    input:bind( "k", "k" )
-    input:bind( "h", "h" )
-    input:bind( "l", "l" )
-    input:bind( "y", "y" )
-    input:bind( "u", "u" )
-    input:bind( "b", "b" )
-    input:bind( "n", "n" )
-    input:bind( ".", "wait" )
-    input:bind( "mouse1", "mouse1" )
-    input:bind( "mouse2", "mouse2" )
-    input:bind( "g", "pickup" )
-    input:bind( "i", "inventory" )
+    
     
     local fighter_component = Fighter( 30, 2, 5 )
     local inventory_component = Inventory( 26 )
@@ -71,7 +54,7 @@ end
 
 
 function love.update( dt )
-    local action = handle_keys()
+    local action = handle_keys( game_states )
     local player_turn_results = {}
     
     if action then
@@ -146,7 +129,12 @@ function love.update( dt )
             game_states = GAME_STATES.SHOW_INVENTORY
         end
         
-        
+        if action['inventory_index'] and previous_game_state ~= GAME_STATES.PLAYER_DEAD and action['inventory_index'] <= #player.inventory.items then
+            --previous_game_state = game_states
+            --game_states = GAME_STATES.SHOW_INVENTORY
+            local item = player.inventory.items[ action['inventory_index'] ]
+            print( item.name )
+        end
         
     end
     
