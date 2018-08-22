@@ -7,6 +7,8 @@ function BindKeymap( input, keymapState )
         bind_player_turn_keys( input ) 
     elseif keymapState == GAME_STATES.SHOW_INVENTORY then 
         bind_inventory_keys( input )
+    elseif keymapState == GAME_STATES.PLAYER_DEAD then 
+        bind_player_dead_keys( input )    
     end
 
 end
@@ -43,6 +45,13 @@ function bind_player_turn_keys( input )
     input:bind( "mouse1", "mouse1" )
     input:bind( "mouse2", "mouse2" )
     input:bind( "g", "pickup" )
+    input:bind( "i", "inventory" )
+    input:bind( "escape", "escape" )
+end
+
+
+function bind_player_dead_keys( input )
+    input:unbindAll()
     input:bind( "i", "inventory" )
     input:bind( "escape", "escape" )
 end

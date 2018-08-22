@@ -134,6 +134,7 @@ function love.update( dt )
             --game_states = GAME_STATES.SHOW_INVENTORY
             local item = player.inventory.items[ action['inventory_index'] ]
             print( item.name )
+            table.insert( player_turn_results, player.inventory:use( item ) )
         end
         
     end
@@ -142,6 +143,8 @@ function love.update( dt )
         local message = r[ "message" ]
         local dead_entity = r[ "dead" ]
         local item_added = r[ "item_added" ]
+        local item_consumed = r[ "consumed" ]
+        
         if message then message_log:AddMessage( message ) end
         if dead_entity then 
             --print( "We found dead bodies!" ) 
@@ -169,6 +172,9 @@ function love.update( dt )
             game_states = GAME_STATES.ENEMY_TURN
         end
         
+        if item_consumed then
+            game_states = GAME_STATES.ENEMY_TURN
+        end
     end
     
 

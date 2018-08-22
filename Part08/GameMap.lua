@@ -5,6 +5,7 @@ require 'Part08/Fighter'
 require 'Part08/AI'
 require 'Part08/Colors'
 require 'Part08/Item'
+require 'Part08/ItemFunctions'
 
 GameMap = Object:extend()
 
@@ -215,7 +216,7 @@ function GameMap:place_entities( room, entities, max_monsters_per_room, max_item
         end
         
         if foundEmptyCell then
-            local item_component = Item()
+            local item_component = Item( heal, { amount = 4 } )
             local item =  Entity( x, y, '藥', COLORS.LIGHTEST_VIOLET, '藥水', false, RENDER_ORDER.ITEM, nil, nil, item_component )
             
             table.insert( entities, item )
