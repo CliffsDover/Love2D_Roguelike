@@ -68,7 +68,11 @@ function render_all( entities, gameMap, screenWidth, screenHeight, colors, messa
     -- render menu
     if game_state == GAME_STATES.SHOW_INVENTORY then
         InventoryMenu( "按下代號來使用物品，或按ESC離開\n", player.inventory, 30, screenWidth, screenHeight )
+    elseif game_state == GAME_STATES.DROP_INVENTORY then
+        InventoryMenu( "按下代號來丟棄物品，或按ESC離開\n", player.inventory, 30, screenWidth, screenHeight )
     end
+    
+
     
     
 end

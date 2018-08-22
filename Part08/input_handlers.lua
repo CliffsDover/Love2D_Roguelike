@@ -12,7 +12,7 @@ function handle_keys( gameState )
         return handle_player_turn_keys()
     elseif gameState == GAME_STATES.PLAYER_DEAD then
         return handle_player_dead_keys()
-    elseif gameState == GAME_STATES.SHOW_INVENTORY then
+    elseif gameState == GAME_STATES.SHOW_INVENTORY or gameState == GAME_STATES.DROP_INVENTORY then
         return handle_inventory_keys()        
     end
         
@@ -42,7 +42,9 @@ function handle_player_turn_keys()
     elseif input:down( "pickup", interval ) then 
         return { pickup = true }    
     elseif input:down( "inventory", interval ) then 
-        return { show_inventory = true }          
+        return { show_inventory = true }      
+    elseif input:down( "drop_inventory", interval ) then 
+        return { drop_inventory = true }          
     elseif input:pressed( "escape" ) then 
         return { exit = true }
     end

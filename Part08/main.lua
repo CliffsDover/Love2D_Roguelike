@@ -60,7 +60,7 @@ function love.update( dt )
     if action then
         
         if action['exit'] == true then
-            if game_states == GAME_STATES.SHOW_INVENTORY then
+            if game_states == GAME_STATES.SHOW_INVENTORY or game_states == GAME_STATES.DROP_INVENTORY then
                 game_states = previous_game_state
             else
                 love.event.quit()
@@ -129,12 +129,22 @@ function love.update( dt )
             game_states = GAME_STATES.SHOW_INVENTORY
         end
         
+        if action['drop_inventory'] then
+            previous_game_state = game_states
+            game_states = GAME_STATES.DROP_INVENTORY
+        end        
+        
         if action['inventory_index'] and previous_game_state ~= GAME_STATES.PLAYER_DEAD and action['inventory_index'] <= #player.inventory.items then
             --previous_game_state = game_states
             --game_states = GAME_STATES.SHOW_INVENTORY
             local item = player.inventory.items[ action['inventory_index'] ]
-            print( item.name )
-            table.insert( player_turn_results, player.inventory:use( item ) )
+            --print( item.name )
+            if game_states == GAME_STATES.SHOW_INVENTORY then
+                table.insert( player_turn_results, player.inventory:use( item ) )
+            elseif game_states == GAME_STATES.DROP_INVENTORY then
+                table.insert( player_turn_results, player.inventory:drop_item( item ) )
+            end
+            
         end
         
     end
@@ -144,6 +154,7 @@ function love.update( dt )
         local dead_entity = r[ "dead" ]
         local item_added = r[ "item_added" ]
         local item_consumed = r[ "consumed" ]
+        local item_dropped = r[ "item_dropped" ]
         
         if message then message_log:AddMessage( message ) end
         if dead_entity then 
@@ -175,6 +186,12 @@ function love.update( dt )
         if item_consumed then
             game_states = GAME_STATES.ENEMY_TURN
         end
+        
+        if item_dropped then
+            table.insert( entities, item_dropped )
+            game_states = GAME_STATES.ENEMY_TURN
+        end
+        
     end
     
 

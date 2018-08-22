@@ -66,3 +66,15 @@ function Inventory:remove_item( item )
     end
     if itemIndex > 0 then table.remove( self.items, itemIndex ) end
 end
+
+function Inventory:drop_item( item )
+   local results = {}
+   
+   item.x = self.owner.x
+   item.y = self.owner.y   
+   self:remove_item( item )
+   results[ 'item_dropped' ] = item
+   results[ 'message' ] = Message( "你將"..item.name.."丟到地上。", COLORS.YELLOW )
+   return results
+end
+
