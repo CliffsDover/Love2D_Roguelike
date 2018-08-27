@@ -80,11 +80,13 @@ function cast_fireball( caster, args )
     table.insert( results, result )
     
     for _, e in ipairs( entities ) do
-        if e:distance( target_x, target_y ) <= radius then
-            table.insert( results, Message( e.name.."被燒灼，造成了"..damage.."點的傷害。", COLORS.ORANGE ) )
+        if e:distance( target_x, target_y ) <= radius and e.fighter then
+            local result = {}
+            result[ 'message' ] = Message( e.name.."被燒灼，造成了"..damage.."點的傷害。", COLORS.ORANGE )
+            table.insert( results, result )
                 
             local take_damage_result = e.fighter:take_damage( damage )
-            for k, v in pairs( take_damage_result ) do results[ k ] = v end   
+            table.insert( results, take_damage_result )
         end
     end
     

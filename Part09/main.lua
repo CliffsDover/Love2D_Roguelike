@@ -46,7 +46,7 @@ function love.load()
     fov_recompute = true
     game_states = GAME_STATES.PLAYERS_TURN
     previous_game_state = game_states
-    
+    targeting_item = nil
     message_log = MessageLog( message_x, message_width, message_height )
      
 end
@@ -62,6 +62,8 @@ function love.update( dt )
         if action['exit'] == true then
             if game_states == GAME_STATES.SHOW_INVENTORY or game_states == GAME_STATES.DROP_INVENTORY then
                 game_states = previous_game_state
+            elseif game_states == GAME_STATES.TARGETING then
+                table.insert( player_turn_results, { targeting_cancelled = true } )    
             else
                 love.event.quit()
             end
@@ -147,6 +149,21 @@ function love.update( dt )
             
         end
         
+        
+        if game_states == GAME_STATES.TARGETING then
+            if action[ 'confirm' ] then
+                local target_x = action[ 'target_x' ]
+                local target_y = action[ 'target_y' ]
+                local item_use_result = player.inventory:use( targeting_item, { entities = entities, gameMap = gameMap, target_x = target_x, target_y = target_y } )
+                --table.insert( player_turn_results, item_use_result )
+                for k, v in pairs( item_use_result ) do player_turn_results[ k ] = v end
+            elseif action[ 'cancel' ] then
+                table.insert( player_turn_results, { targeting_cancelled = true } )
+            end
+            
+            
+        end       
+        
     end
     
     for _, r in ipairs( player_turn_results ) do
@@ -155,12 +172,14 @@ function love.update( dt )
         local item_added = r[ "item_added" ]
         local item_consumed = r[ "consumed" ]
         local item_dropped = r[ "item_dropped" ]
+        local targeting = r[ 'targeting' ]
+        local targeting_cancelled = r[ 'targeting_cancelled' ]
         
         if message then message_log:AddMessage( message ) end
         if dead_entity then 
             --print( "We found dead bodies!" ) 
             local message
-            local game_states
+
             if dead_entity == player then
                 message, game_states = kill_player( dead_entity )
             else
@@ -190,6 +209,18 @@ function love.update( dt )
         if item_dropped then
             table.insert( entities, item_dropped )
             game_states = GAME_STATES.ENEMY_TURN
+        end
+        
+        if targeting then
+            previous_game_state = GAME_STATES.PLAYERS_TURN
+            game_states = GAME_STATES.TARGETING
+            targeting_item = targeting
+            message_log:AddMessage( targeting_item.item.targeting_message )
+        end
+        
+        if targeting_cancelled then
+            game_states = previous_game_state
+            message_log:AddMessage( Message( "取消瞄準。" ) )
         end
         
     end

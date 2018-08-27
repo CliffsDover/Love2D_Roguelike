@@ -31,25 +31,29 @@ function Inventory:use( item_entity, args )
     if item_component.use_function == nil then
         results[ 'message' ] = Message( item_entity.name.."無法被使用。", COLORS.YELLOW )
     else
-        -- merge args?
-        for k, v in pairs( item_component.use_function_args ) do
-            args[ k ] = v
-        end
         
-        local item_use_results = item_component.use_function( self.owner, args )
-        
-        for _, item_use_result in ipairs( item_use_results ) do
-            if item_use_result[ 'consumed' ] == true then
-                self:remove_item( item_entity )
+        if item_component.targeting and not( args[ 'target_x' ] or args[ 'target_y' ] ) then
+            results[ 'targeting' ] = item_entity
+        else
+            -- merge args?
+            for k, v in pairs( item_component.use_function_args ) do
+                args[ k ] = v
             end
-            
-            for k, v in pairs( item_use_result ) do
-                results[ k ] = v
+
+            local item_use_results = item_component.use_function( self.owner, args )
+
+            for _, item_use_result in ipairs( item_use_results ) do
+                if item_use_result[ 'consumed' ] == true then
+                    self:remove_item( item_entity )
+                end
+                
+                --for k, v in pairs( item_use_result ) do
+                --    results[ k ] = v
+                --end
+                
+                table.insert( results, item_use_result )
             end
-            
-            --table.insert( results, item_use_result )
         end
-        
     end
     return results
 end

@@ -14,6 +14,8 @@ function handle_keys( gameState )
         return handle_player_dead_keys()
     elseif gameState == GAME_STATES.SHOW_INVENTORY or gameState == GAME_STATES.DROP_INVENTORY then
         return handle_inventory_keys()        
+    elseif gameState == GAME_STATES.TARGETING then
+        return handle_targeting_keys()         
     end
         
 end
@@ -89,4 +91,22 @@ function handle_inventory_keys()
     return nil
 end
 
+
+function handle_targeting_keys()
+    local interval = 0.125
+    
+    if input:pressed( "confirm" ) then 
+        local mouseX, mouseY = love.mouse.getPosition()
+        local mouseCellX = math.floor( mouseX / tileWidth ) + 1
+        local mouseCellY = math.floor( mouseY / tileHeight ) + 1
+        return { confirm = true, target_x = mouseCellX, target_y = mouseCellY } 
+    elseif input:pressed( "cancel" ) then 
+    --if input:pressed( "cancel" ) then 
+        return { cancel = true }
+    end
+    
+    if input:pressed( "escape" ) then 
+        return { exit = true }
+    end
+end
 

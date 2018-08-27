@@ -12,10 +12,11 @@ function Fighter:new( hp, defense, power )
 end
 
 function Fighter:take_damage( amount )
-    local results = nil
+    local results = {}
     self.hp = self.hp - amount
     if self.hp <= 0 then
         results = { dead = self.owner }
+        self.hp = 0
     end
     return results
 end

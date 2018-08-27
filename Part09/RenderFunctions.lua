@@ -105,8 +105,10 @@ function render_bar( x, y, total_width, name, value, maximum, bar_color, back_co
         if e.x == mouseX and e.y == mouseY and  gameMap.tiles[mouseX][mouseY].is_in_fov then
             if names == "" then
                 names = e.name
+                if e.fighter then names = names..'('..e.fighter.hp..')' end
             else
-                names = names   .."，"..e.name
+                names = names.."，"..e.name
+                if e.fighter then names = names..'('..e.fighter.hp..')' end
             end
             
         end

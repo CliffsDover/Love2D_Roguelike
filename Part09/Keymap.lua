@@ -9,6 +9,8 @@ function BindKeymap( input, keymapState )
         bind_inventory_keys( input )
     elseif keymapState == GAME_STATES.PLAYER_DEAD then 
         bind_player_dead_keys( input )    
+    elseif keymapState == GAME_STATES.TARGETING then 
+        bind_targeting_keys( input )        
     end
 
 end
@@ -54,5 +56,12 @@ end
 function bind_player_dead_keys( input )
     input:unbindAll()
     input:bind( "i", "inventory" )
+    input:bind( "escape", "escape" )
+end
+
+function bind_targeting_keys( input )
+    input:unbindAll()
+    input:bind( "mouse1", "confirm" )
+    input:bind( "mouse2", "cancel" )
     input:bind( "escape", "escape" )
 end

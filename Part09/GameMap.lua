@@ -6,6 +6,7 @@ require 'Part09/AI'
 require 'Part09/Colors'
 require 'Part09/Item'
 require 'Part09/ItemFunctions'
+require 'Part09/GameMessages'
 
 GameMap = Object:extend()
 
@@ -222,6 +223,9 @@ function GameMap:place_entities( room, entities, max_monsters_per_room, max_item
             if item_chance < 10 then
                 item_component = Item( heal, { amount = 4 } )
                 item =  Entity( x, y, '藥', COLORS.LIGHTEST_VIOLET, '藥水', false, RENDER_ORDER.ITEM, nil, nil, item_component )
+            elseif item_chance < 85 then
+                item_component = Item( cast_fireball, { damage = 100, radius = 3 }, true, Message( "按滑鼠左鍵以選擇目標來發射火球，或按滑鼠右鍵取消。", COLORS.CYAN ) )
+                item =  Entity( x, y, '卷', COLORS.RED, '火球卷軸', false, RENDER_ORDER.ITEM, nil, nil, item_component )
             else
                 item_component = Item( cast_lightning, { damage = 20, maximum_range = 5 } )
                 item =  Entity( x, y, '卷', COLORS.YELLOW, '閃電卷軸', false, RENDER_ORDER.ITEM, nil, nil, item_component )
