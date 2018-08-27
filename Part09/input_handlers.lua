@@ -1,4 +1,4 @@
-require 'Libraries/input'
+require 'Libraries/Input'
 require 'Part09/GameStates'
 require 'Part09/Keymap'
 

@@ -83,6 +83,14 @@ function Entity:distance_to( other )
     return distance
 end
 
+function Entity:distance( x, y )
+    local dx = x - self.x
+    local dy = y - self.y
+    local distance = math.sqrt( math.pow( dx, 2 ) + math.pow( dy, 2 ) )
+    --sprint( "[Entity:distance_to] "..distance )
+    return distance
+end
+
 
 function Entity:move_astar( target, entities, gameMap )
     self.astar=ROT.Path.AStar(self.x, self.y, passableCallback)

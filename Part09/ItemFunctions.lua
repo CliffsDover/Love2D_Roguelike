@@ -56,3 +56,37 @@ function cast_lightning( caster, args )
     
     return { results }
 end
+
+
+function cast_fireball( caster, args )
+    local entities = args[ 'entities' ]
+    local gameMap = args[ 'gameMap' ]
+    local damage = args[ 'damage' ]
+    local radius = args[ 'radius' ]
+    local target_x = args[ 'target_x' ]
+    local target_y = args[ 'target_y' ]    
+    
+    local results = {}
+    local result = {}
+    
+    if not gameMap:IsVisible( target_x, target_y ) then
+        result[ 'consumed' ] = false
+        result[ 'message' ] = Message( "你無法攻擊視野外的目標。", COLORS.YELLOW )
+        return { result }
+    end
+    
+    result[ 'consumed' ] = true
+    result[ 'message' ] = Message( "一團火球射出並爆炸，相鄰"..radius.."格內的所有事物皆受到了傷害。", COLORS.ORANGE )
+    table.insert( results, result )
+    
+    for _, e in ipairs( entities ) do
+        if e:distance( target_x, target_y ) <= radius then
+            table.insert( results, Message( e.name.."被燒灼，造成了"..damage.."點的傷害。", COLORS.ORANGE ) )
+                
+            local take_damage_result = e.fighter:take_damage( damage )
+            for k, v in pairs( take_damage_result ) do results[ k ] = v end   
+        end
+    end
+    
+    return results
+end

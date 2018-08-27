@@ -1,4 +1,4 @@
-require 'Libraries/input'
+require 'Libraries/Input'
 
 function handle_keys()
     local interval = 0.125
