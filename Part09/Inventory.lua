@@ -36,8 +36,10 @@ function Inventory:use( item_entity, args )
             results[ 'targeting' ] = item_entity
         else
             -- merge args?
-            for k, v in pairs( item_component.use_function_args ) do
-                args[ k ] = v
+            if item_component.use_function_args then
+                for k, v in pairs( item_component.use_function_args ) do
+                    args[ k ] = v
+                end
             end
 
             local item_use_results = item_component.use_function( self.owner, args )
@@ -72,13 +74,15 @@ function Inventory:remove_item( item )
 end
 
 function Inventory:drop_item( item )
+   local result = {}
    local results = {}
    
    item.x = self.owner.x
    item.y = self.owner.y   
    self:remove_item( item )
-   results[ 'item_dropped' ] = item
-   results[ 'message' ] = Message( "你將"..item.name.."丟到地上。", COLORS.YELLOW )
+   result[ 'item_dropped' ] = item
+   result[ 'message' ] = Message( "你將"..item.name.."丟到地上。", COLORS.YELLOW )
+   table.insert( results, result )
    return results
 end
 

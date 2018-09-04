@@ -26,6 +26,7 @@ function cast_lightning( caster, args )
     local damage = args[ 'damage' ]
     local maximum_range = args[ 'maximum_range' ]
     
+    local result = {}
     local results = {}
     
     local target = nil
@@ -42,19 +43,21 @@ function cast_lightning( caster, args )
     end
     
     if target then
-        results[ 'consumed' ] = true
-        results[ 'target' ] = target
-        results[ 'message' ] = Message( "一道閃電擊中了"..target.name.."，發出巨大的聲響!造成了"..damage..'點的傷害。' )
+        result[ 'consumed' ] = true
+        result[ 'target' ] = target
+        result[ 'message' ] = Message( "一道閃電擊中了"..target.name.."，發出巨大的聲響!造成了"..damage..'點的傷害。' )
+        table.insert( results, result )
         
         local take_damage_result = target.fighter:take_damage( damage )
-        for k, v in pairs( take_damage_result ) do results[ k ] = v end
+        table.insert( results, take_damage_result )
     else
-        results[ 'consumed' ] = false
-        results[ 'target' ] = nil
-        results[ 'message' ] = Message( "在附近並沒有任何的敵人。" )        
+        result[ 'consumed' ] = false
+        result[ 'target' ] = nil
+        result[ 'message' ] = Message( "在附近並沒有任何的敵人。" )   
+        table.insert( results, result )
     end
     
-    return { results }
+    return results
 end
 
 
@@ -89,6 +92,51 @@ function cast_fireball( caster, args )
             table.insert( results, take_damage_result )
         end
     end
+    
+    return results
+end
+
+
+
+function cast_confuse( caster, args )
+    local entities = args[ 'entities' ]
+    local gameMap = args[ 'gameMap' ]
+    local target_x = args[ 'target_x' ]
+    local target_y = args[ 'target_y' ]    
+    
+    local results = {}
+    local result = {}
+    
+    if not gameMap:IsVisible( target_x, target_y ) then
+        result[ 'consumed' ] = false
+        result[ 'message' ] = Message( "你無法選擇視野外的目標。", COLORS.YELLOW )
+        return { result }
+    end
+    
+
+    
+    local targetFound = false
+    for _, e in ipairs( entities ) do
+        if ( e.x == target_x ) and ( e.y == target_y ) then
+            local confusedAI = ConfusedMonsterAI( e.AI, 10 )
+            confusedAI.owner = e
+            e.AI = confusedAI
+            
+            result[ 'consumed' ] = true
+            result[ 'message' ] = Message( e.name.."被迷惑了，開始蹣跚而行。", COLORS.YELLOW )
+            table.insert( results, result )
+            
+            targetFound = true
+            break
+        end
+    end
+    
+    if not targetFound then
+        result[ 'consumed' ] = false
+        result[ 'message' ] = Message( "此處並沒有可以選擇的目標。", COLORS.YELLOW )
+        table.insert( results, result )
+    end
+    
     
     return results
 end
