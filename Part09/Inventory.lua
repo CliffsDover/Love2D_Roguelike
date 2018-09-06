@@ -27,13 +27,15 @@ end
 function Inventory:use( item_entity, args )
     args = args or {}
     local results = {}
+    local result = {}
     local item_component = item_entity.item
     if item_component.use_function == nil then
         results[ 'message' ] = Message( item_entity.name.."無法被使用。", COLORS.YELLOW )
     else
         
         if item_component.targeting and not( args[ 'target_x' ] or args[ 'target_y' ] ) then
-            results[ 'targeting' ] = item_entity
+            result[ 'targeting' ] = item_entity
+            table.insert( results, result )
         else
             -- merge args?
             if item_component.use_function_args then
